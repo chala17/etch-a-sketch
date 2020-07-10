@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>ETCH-A-SKETCH</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div class="hero">
+        <h1>ETCH-A-SKETCH</h1>
+        <div class="textBox">
+            <p>Hello! Use the buttons below to generate yourself an etch-a-sketch board you can play around with by 
+                dragging your mouse through!
+            </p>
+        </div>
+        <div id=btnBlock>
+            <button id="color">Create Color Grid</button>
+            <button id="shaded">Create Shaded Grid</button>
+            <button id="clear">Clear Grid</button>
+        </div>
+        <div id="container">
+
+        </div>
+        </div>
+        <script>
+            
+            //event listener for when buttons are clicked
+            document.getElementById('color').addEventListener('click', createColoredGrid); 
+            document.getElementById('shaded').addEventListener('click', createShadedGrid);
+            document.getElementById('clear').addEventListener('click', clearGrid); 
+
+            function createColoredGrid() {
+
+                //prompt to get number of rows and columns
+                if (document.getElementsByClassName('tile').length > 0) {
+                    alert("Please press the 'Clear Grid' button first!");
+                    return;
+                }
+                let grid = 0
+                do {
+                    grid = parseInt(prompt("Please enter a number to create a grid of rows & columns"));
+                    if (grid > 50 || grid < 0) {
+                        alert("Please pick a number between 0 and 50!")
+                        grid = 0;
+                    }
+                } while (!grid);
+
+                let container = document.getElementById('container');
+                let size = Math.floor(500 / grid);
+                let colored = false;
+                //generate grid using prompt
+
+                //outer loop for rows
+                for (let i = 0; i < grid; i++) {    
+                    let outerDiv = document.createElement('div');
+                    outerDiv.style.height = `${size}px`;
+
+                    //inner loop for columns
+                    for (let j = 0; j < grid; j++) {    
+                        let innerDiv = document.createElement('div');
+                        innerDiv.style.display = "inline-block";
+                        innerDiv.style.width = `${size}px`;
+                        innerDiv.style.backgroundColor = "#f2f2f2";
+                        innerDiv.style.boxSizing = "border-box";
+                        innerDiv.style.height = "100%";
+                        innerDiv.style.border = "1px solid black";
+                        innerDiv.classList.add('tile');
+                        innerDiv.addEventListener('mouseenter', () => {
+                            innerDiv.style.backgroundColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+                        });
+                        outerDiv.appendChild(innerDiv);
+                    }
+                    container.appendChild(outerDiv);
+                }
+            }
+
+            function createShadedGrid() {
+
+                //prompt to get number of rows and columns
+                if (document.getElementsByClassName('tile').length > 0) {
+                    alert("Please press the 'Clear Grid' button first!");
+                    return;
+                }
+                let grid = 0
+                do {
+                    grid = parseInt(prompt("Please enter a number to create a grid of rows & columns"));
+                    if (grid > 50 || grid < 0) {
+                        alert("Please pick a number between 0 and 100!")
+                        grid = 0;
+                    }
+                } while (!grid);
+
+                let container = document.getElementById('container');
+                let size = Math.floor(500 / grid);
+                //generate grid using prompt
+
+                //outer loop for rows
+                for (let i = 0; i < grid; i++) {    
+                    let outerDiv = document.createElement('div');
+                    outerDiv.style.height = `${size}px`;
+
+                    //inner loop for columns
+                    for (let j = 0; j < grid; j++) {    
+                        let innerDiv = document.createElement('div');
+                        innerDiv.style.display = "inline-block";
+                        innerDiv.style.width = `${size}px`;
+                        innerDiv.style.backgroundColor = "#fff";
+                        innerDiv.style.boxSizing = "border-box";
+                        innerDiv.style.height = "100%";
+                        innerDiv.style.border = "1px solid black";
+                        innerDiv.classList.add('tile');
+                        innerDiv.addEventListener('mouseenter', function (e) {
+                            if (!this.dataset.customVariable) {
+                                this.dataset.customVariable = 1;
+                            }
+                            else if (this.dataset.customVariable.length < 11) {
+                                this.dataset.customVariable += 1;
+                            }
+                            this.style.backgroundColor = `rgb(${255 - (this.dataset.customVariable.length * 25)}, ${255 - (this.dataset.customVariable.length * 25)}, ${255 - (this.dataset.customVariable.length * 25)})`;
+                        });
+                        outerDiv.appendChild(innerDiv);
+                    }
+                    container.appendChild(outerDiv);
+                }
+            }
+
+            function clearGrid() {
+                let container = document.getElementById('container');
+                if (document.getElementsByClassName('tile').length < 1) {
+                    alert("There's nothing to clear!");
+                    return;
+                }
+                while(container.firstChild) {
+                    container.removeChild(container.firstChild);
+                }
+                let answer = prompt("Would you like to play again?\nY/N").toLowerCase();
+                while (answer != 'n' && answer != 'y') {
+                    answer = prompt("Please enter either 'Y' or 'N'");
+                }
+                if (answer == 'n') {
+                    alert("Have a nice day! Thank you for playing!")
+                    return;
+                }
+                else {
+                    answer = prompt("Would you like to play with colorful tiles, or shaded tiles?\nC/S").toLowerCase();
+                }
+                while (answer != 'c' && answer != 's') {
+                    answer = prompt("Please enter either 'S' or 'C'");
+                }
+                if (answer == 'c') {
+                    createColoredGrid();
+                }
+                else {
+                    createShadedGrid();
+                }
+            }
+
+
+        </script>
+    </body>
+</html>
